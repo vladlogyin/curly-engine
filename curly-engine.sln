@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "curly-engine", "curly-engine\curly-engine.csproj", "{125C3D8A-A809-4BC9-A1D6-116C3E573C8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{CA842E9D-5313-406A-99D5-56DEA61F30F8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{125C3D8A-A809-4BC9-A1D6-116C3E573C8F}.Debug|x86.ActiveCfg = Debug|x86
+		{125C3D8A-A809-4BC9-A1D6-116C3E573C8F}.Debug|x86.Build.0 = Debug|x86
+		{125C3D8A-A809-4BC9-A1D6-116C3E573C8F}.Release|x86.ActiveCfg = Release|x86
+		{125C3D8A-A809-4BC9-A1D6-116C3E573C8F}.Release|x86.Build.0 = Release|x86
+		{CA842E9D-5313-406A-99D5-56DEA61F30F8}.Debug|x86.ActiveCfg = Debug|x86
+		{CA842E9D-5313-406A-99D5-56DEA61F30F8}.Debug|x86.Build.0 = Debug|x86
+		{CA842E9D-5313-406A-99D5-56DEA61F30F8}.Release|x86.ActiveCfg = Release|x86
+		{CA842E9D-5313-406A-99D5-56DEA61F30F8}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+EndGlobal
