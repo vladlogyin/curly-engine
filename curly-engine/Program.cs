@@ -1,12 +1,13 @@
 ﻿using System;
+using System.IO;
 
-namespace curlyengine
+namespace CurlyEngine
 {
-	class MainClass
+	class Test
 	{
 		public static void Main (string[] args)
 		{
-			Console.WriteLine ("Hello World!");
+			Console.WriteLine ("Hello Curlyworld test!");
 		}
 	}
 }
