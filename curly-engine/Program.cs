@@ -10,7 +10,9 @@ namespace CurlyEngine
 		{
 			Console.WriteLine ("Hello Curlyworld test!");
 			ClientBase game = new ClientBase();
-			game.Run ();
+            game.Start();
+            Console.ReadLine();
+            game.Stop();
 		}
 	}
 }
