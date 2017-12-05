@@ -31,10 +31,28 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="OpenTK">
+      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\CurlyEngine.Client\CurlyEngine.Client.csproj">
+      <Project>{E2254005-34C7-46D3-A2CD-7D116734E3A7}</Project>
+      <Name>CurlyEngine.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Server\CurlyEngine.Server.csproj">
+      <Project>{CA842E9D-5313-406A-99D5-56DEA61F30F8}</Project>
+      <Name>CurlyEngine.Server</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

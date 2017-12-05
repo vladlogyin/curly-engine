@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "curly-engine", "curly-engine\curly-engine.csproj", "{125C3D8A-A809-4BC9-A1D6-116C3E573C8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{CA842E9D-5313-406A-99D5-56DEA61F30F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurlyEngine.Server", "Server\CurlyEngine.Server.csproj", "{CA842E9D-5313-406A-99D5-56DEA61F30F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurlyEngine.Client", "CurlyEngine.Client\CurlyEngine.Client.csproj", "{E2254005-34C7-46D3-A2CD-7D116734E3A7}"
 EndProject
