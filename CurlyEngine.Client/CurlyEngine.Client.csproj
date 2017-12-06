@@ -66,6 +66,14 @@
     <Folder Include="Data\Fonts\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\Fonts\verdana.ttf" />
+    <Content Include="Data\Fonts\verdana.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Server\CurlyEngine.Server.csproj">
+      <Project>{CA842E9D-5313-406A-99D5-56DEA61F30F8}</Project>
+      <Name>CurlyEngine.Server</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

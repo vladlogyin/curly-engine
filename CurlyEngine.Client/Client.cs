@@ -12,42 +12,76 @@ using SharpNoise.Modules;
 using SharpNoise.Utilities;
 using QuickFont;
 using QuickFont.Configuration;
+using System.IO;
+using AwesomeSockets.Domain.Sockets;
+using AwesomeSockets.Sockets;
+using CurlyEngine.Server;
 
 namespace CurlyEngine.Client
 {
-    /// <summary>
-    /// CientInfo class to provide position, id,name,inventory id
-    /// </summary>
-    public class ClientInfo
-    {
-        public ClientInfo(int id, string name)
-        {
-            
-        }
-        public static int GetClientID()
-        {
-            return 0; 
-        }
-    }
+    
 	/// <summary>
 	///CurlyEngine client base class.
 	/// </summary>
 	public class ClientBase
 	{
+        /// <summary>
+        /// The rendering thread.
+        /// </summary>
+        Thread renderThread;
+        /// <summary>
+        /// The server connection thread.
+        /// </summary>
+        Thread connectionThread;
+        ISocket server;
+        public int Connected;
+        public int ID;
+        /// <summary>
+        /// The lighting and occlusion thread.
+        /// </summary>
+        Thread lightingThread;
 		ClientRenderer rend;
         public bool Running;
 		public ClientBase()
 		{
+            //
+            connectionThread = new Thread(new ThreadStart(delegate{
+                rend.TopBarColor = Color.Brown;
+                rend.TopBar = "Not Connected";
+                Connected = 0;
+                while (Connected != 1)
+                {
+                    
+                    try
+                    {
+                        server = AweSock.TcpConnect("127.0.0.1", ServerClass.Port);
+                        rend.TopBarColor = Color.Lime;
+                        rend.TopBar = "Connected";
+                        Connected = 1;
+                    }
+                    catch
+                    {
+                        rend.TopBarColor = Color.Red;
+                        rend.TopBar = "Failed to connect!";
+                        Connected = -1;
+                    }
+                }
+            }));
+            //
 			rend = new ClientRenderer ();
             Running = false;
 		}
 		public void Start()
 		{
+            connectionThread.Start();
+            //
 			rend.Run (60);
+
             Running = true;
 		}
         public void Stop()
         {
+            connectionThread.Abort();
             Running = false;
         }
 	}
@@ -56,6 +90,16 @@ namespace CurlyEngine.Client
     /// </summary>
     public class ClientRenderer : GameWindow
     {
+        public string BottomLeft="kek";
+        public Color BottomLeftColor = Color.White;
+        public string TopBar="kek";
+        public Color TopBarColor = Color.White;
+        public string Motd="kek";
+        public Color MotdColor = Color.White;
+        public string TopRight="kek";
+        public Color TopRightColor = Color.White;
+        public string BottomRight="kek";
+        public Color BottomRightColor = Color.White;
         Perlin test;
         QFont verdana;
         QFontDrawing drawing;
@@ -72,28 +116,41 @@ namespace CurlyEngine.Client
 		{
 			base.OnLoad (e);
             #region Fonts
-            verdana = new QFont(new GDIFont("Data/Fonts/" +
-                                            "verdana.ttf",30,FontStyle.Regular), new QFontBuilderConfiguration(true));
             drawing = new QFontDrawing();
 
+            QFontBuilderConfiguration buildOpts = new QFontBuilderConfiguration()
+            {
+                ShadowConfig = new QFontShadowConfiguration()
+                {
+                    BlurRadius=5,
+                    BlurPasses=1,
+                    Type=ShadowType.Blurred
+                },
+                TextGenerationRenderHint = TextGenerationRenderHint.ClearTypeGridFit,
+                Characters = CharacterSet.General
+            };
+            verdana = new QFont("Data/Fonts/verdana.ttf",20,buildOpts);
             QFontRenderOptions textOpts = new QFontRenderOptions()
             {
                 Colour = Color.Aqua,
                 DropShadowActive = true
             };
-            SizeF size = drawing.Print(verdana, "Hello curly-engine", new Vector3(100, 100, 0), QFontAlignment.Left,textOpts);
-            drawing.RefreshBuffers();
+
+
             #endregion
             GL.ClearColor (Color.Black);
-            //GL.MatrixMode(MatrixMode.Modelview);
-            GL.Viewport(0, 0, this.Width, this.Height);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
             GL.Ortho(0, this.Width, 0, this.Height, -1, 1);
+            GL.Viewport(0, 0, this.Width, this.Height);
 		}
 		protected override void OnResize(EventArgs e)
 		{
 			base.OnResize (e);
-			GL.Viewport (0,0,this.Width,this.Height);
-            //GL.Ortho(0, this.Width, 0, this.Height, -1, 1);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, this.Width, 0, this.Height, -1, 1);
+            GL.Viewport(0, 0, this.Width, this.Height);
 		}
 		protected override void OnKeyDown(KeyboardKeyEventArgs e)
 		{
@@ -111,10 +168,28 @@ namespace CurlyEngine.Client
 		{
             base.OnRenderFrame(e);
             GL.Clear (ClearBufferMask.ColorBufferBit | ClearBufferMask.AccumBufferBit|ClearBufferMask.DepthBufferBit);
-            //GL.ClearColor(0.20f, 0.20f, 0.20f, 0.20f);
+            GL.ClearColor(Color.Gray);
+            #region Text rendering
+            drawText(TopBar, this.Width / 2, this.Height-15, verdana, TopBarColor, 30,true,Color.White);
+
+            drawing.ProjectionMatrix = Matrix4.CreateOrthographic(this.Width, this.Height, -1, 1);
+            drawing.RefreshBuffers();
+
             drawing.Draw();
+            drawing.DrawingPrimitives.Clear();
+            #endregion
 			this.SwapBuffers ();
 		}
+        void drawText(string text, float x, float y, QFont font, Color color, float size, bool shadow = false)
+        {
+            drawText(text, x, y, font,color,size,shadow,Color.Black);
+        }
+        void drawText(string text, float x, float y, QFont font, Color color, float size, bool shadow, Color shadowcolor)
+        {
+            QFontDrawingPrimitive dp = new QFontDrawingPrimitive(verdana, new QFontRenderOptions() { Colour = color, DropShadowActive = shadow, DropShadowColour = shadowcolor });
+            dp.Print(text, new Vector3(x-this.Width/2, y-this.Height/2, 0), QFontAlignment.Centre);
+            drawing.DrawingPrimitives.Add(dp);
+        }
 	}
 }
 
