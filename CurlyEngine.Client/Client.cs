@@ -123,7 +123,7 @@ namespace CurlyEngine.Client
                 ShadowConfig = new QFontShadowConfiguration()
                 {
                     BlurRadius=5,
-                    BlurPasses=1,
+                    BlurPasses=5,
                     Type=ShadowType.Blurred
                 },
                 TextGenerationRenderHint = TextGenerationRenderHint.ClearTypeGridFit,
@@ -138,7 +138,7 @@ namespace CurlyEngine.Client
 
 
             #endregion
-            GL.ClearColor (Color.Black);
+            GL.ClearColor (0.2f, 0.2f, 0.2f, 1f);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(0, this.Width, 0, this.Height, -1, 1);
@@ -167,10 +167,14 @@ namespace CurlyEngine.Client
 		protected override void OnRenderFrame (FrameEventArgs e)
 		{
             base.OnRenderFrame(e);
-            GL.Clear (ClearBufferMask.ColorBufferBit | ClearBufferMask.AccumBufferBit|ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(Color.Gray);
+            //GL.ClearColor(Color.Gray);
+            GL.Clear (ClearBufferMask.ColorBufferBit);
+
             #region Text rendering
-            drawText(TopBar, this.Width / 2, this.Height-15, verdana, TopBarColor, 30,true,Color.White);
+            drawText(Motd, this.Width / 2, this.Height / 2 - 18, verdana, MotdColor, 38, QFontAlignment.Centre, true, Color.White);
+            drawText(TopBar, this.Width / 2, this.Height - 10, verdana, TopBarColor, 20, QFontAlignment.Centre,true,Color.White);
+            drawText(BottomLeft, 10, 32, verdana, BottomLeftColor, 16, QFontAlignment.Left, true, Color.White);
+            drawText(BottomRight, this.Width-200, 32, verdana, BottomRightColor, 16, QFontAlignment.Left, true, Color.White);
 
             drawing.ProjectionMatrix = Matrix4.CreateOrthographic(this.Width, this.Height, -1, 1);
             drawing.RefreshBuffers();
@@ -180,14 +184,14 @@ namespace CurlyEngine.Client
             #endregion
 			this.SwapBuffers ();
 		}
-        void drawText(string text, float x, float y, QFont font, Color color, float size, bool shadow = false)
+        void drawText(string text, float x, float y, QFont font, Color color, float size, QFontAlignment align = QFontAlignment.Left,bool shadow = false)
         {
-            drawText(text, x, y, font,color,size,shadow,Color.Black);
+            drawText(text, x, y, font,color,size,align,shadow,Color.Black);
         }
-        void drawText(string text, float x, float y, QFont font, Color color, float size, bool shadow, Color shadowcolor)
+        void drawText(string text, float x, float y, QFont font, Color color, float size, QFontAlignment align, bool shadow, Color shadowcolor)
         {
             QFontDrawingPrimitive dp = new QFontDrawingPrimitive(verdana, new QFontRenderOptions() { Colour = color, DropShadowActive = shadow, DropShadowColour = shadowcolor });
-            dp.Print(text, new Vector3(x-this.Width/2, y-this.Height/2, 0), QFontAlignment.Centre);
+            dp.Print(text, new Vector3(x-this.Width/2, y-this.Height/2, 0), align);
             drawing.DrawingPrimitives.Add(dp);
         }
 	}
